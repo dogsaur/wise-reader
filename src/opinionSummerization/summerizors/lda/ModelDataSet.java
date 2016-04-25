@@ -21,6 +21,8 @@ public class ModelDataSet {
 	public ModelDataSet() {
 		this._docs = new ArrayList<Document>();
 		this._termsMap = new HashMap<String, Term>();
+		this._termIndexMap = new HashMap<String, Integer>();
+		this._indexToTermList = new ArrayList<Term>();
 	}
 	
 	/**
@@ -40,7 +42,10 @@ public class ModelDataSet {
 			Document doc = new Document(docFile.getAbsolutePath());
 			for (String term_text : doc.getTermTexts()) {
 				if (!_termsMap.containsKey(term_text)){
-					_termsMap.put(term_text, new Term(term_text));
+					Term term = new Term(term_text);
+					_termsMap.put(term_text, term);
+					this._indexToTermList.add(term);
+					_termIndexMap.put(term_text, this._termIndexMap.size());
 				}
 				Term term = _termsMap.get(term_text);
 				term.countIncrease();
@@ -52,29 +57,52 @@ public class ModelDataSet {
 	}
 	
 	public void printBrief() {
-		System.out.printf("total docs: %d\n", _docs.size());
+		System.out.printf("total docs : %d\n", _docs.size());
+		System.out.printf("total terms : %d\n", this._termIndexMap.size());
 		for (Document doc : _docs) {
-			System.out.printf("%s : word size = %d\n",doc.get_name(), doc.getTermTexts().size());
+			System.out.printf("%s : word size = %d\n",doc.getName(), doc.getTermTexts().size());
 			for (String term : doc.getTermTexts()) {
-				System.out.println(term);
+				System.out.printf("%s\t", term);
 			}
+			System.out.println();
 		}
 	}
 	
 	/**
 	 * @return the _docs
 	 */
-	public ArrayList<Document> get_docs() {
+	public ArrayList<Document> getDocs() {
 		return _docs;
 	}
 
 	/**
 	 * @return the _termsMap
 	 */
-	public HashMap<String, Term> get_termsMap() {
+	public HashMap<String, Term> getTermsMap() {
 		return _termsMap;
+	}
+	
+	/**
+	 * @description return the index of term 
+	 * @param termText
+	 * @return int
+	 */
+	public int getIndexOfTerm(String termText) {
+		
+		return this._termIndexMap.get(termText);
+	}
+		
+	/**
+	 * @description return the term of specific index
+	 * @param index
+	 * @return Term
+	 */
+	public Term getTermOfIndex(int index) {
+		return this._indexToTermList.get(index);
 	}
 
 	private ArrayList<Document> _docs;
 	private HashMap<String, Term> _termsMap;
+	private HashMap<String, Integer> _termIndexMap;
+	private ArrayList<Term> _indexToTermList;
 }

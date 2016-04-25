@@ -12,14 +12,22 @@ package opinionSummerization.summerizors.lda;
  */
 public class ModelParameters {
 	public ModelParameters(double alpha, double beta, int maxIterTimes, int topicNum){
-		// TODO
+		this.alpha = alpha;
+		this.beta = beta;
+		this.maxIterTimes = maxIterTimes;
+		this.topicNum = topicNum;
+		this.saveStep = 100;
+		this.saveBeginIteration = 1000;
 	}
 	
 	public ModelParameters(String path) {
 		// TODO
 	}
+	
 	public double alpha;
 	public double beta;
-	public int max_iter_times;
-	public int topic_num;
+	public int maxIterTimes;
+	public int topicNum;
+	public int saveStep;
+	public int saveBeginIteration;
 }

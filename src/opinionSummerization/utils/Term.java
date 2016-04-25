@@ -4,7 +4,6 @@ public class Term {
 	public Term(String text) {
 		this._text = text;
 		this._senti_score = 0;
-		this._count = 0;
 	}
 	
 	public String Text() {
@@ -20,10 +19,8 @@ public class Term {
 	}
 	
 	public void countIncrease() {
-		this._count += 1;
 	}
 	
-	private int _count;
 	private String _text;
 	private double _senti_score;
 	private double _weight_score;

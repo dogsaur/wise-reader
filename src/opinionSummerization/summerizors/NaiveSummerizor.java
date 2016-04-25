@@ -5,6 +5,7 @@ import java.util.Set;
 import org.ansj.domain.Term;
 import org.ansj.splitWord.analysis.BaseAnalysis;
 
+import opinionSummerization.utils.Document;
 import opinionSummerization.utils.Sentence;
 import opinionSummerization.utils.SummerizorOutput;
 
@@ -13,7 +14,7 @@ import java.util.Collections;
 import java.util.HashSet;
 
 public class NaiveSummerizor implements Summerizor{
-	public SummerizorOutput Summerize(String text) {
+	public SummerizorOutput summerize(String text) {
 		System.out.println(text);
 		String[] strs = text.split("，|。");
 		System.out.println(strs.length);
@@ -25,7 +26,7 @@ public class NaiveSummerizor implements Summerizor{
 			for (Term term:BaseAnalysis.parse(str)) {
 				words.add(term.getName());
 			}
-			sentence.set_word_set(words);
+			sentence.setTermTexts(words);
 			sentences.add(sentence);
 			System.out.println(str);
 		}
@@ -35,7 +36,7 @@ public class NaiveSummerizor implements Summerizor{
 				if (i == j) {
 					continue;
 				}
-				sentences.get(i).set_score(sentences.get(i).score() + calc_score(sentences.get(i), sentences.get(j)));
+				sentences.get(i).setScore(sentences.get(i).getScore() + calcScore(sentences.get(i), sentences.get(j)));
 			}
 			//System.out.println("Sentence #" + i + " Score=" + sentences.get(i).score());
 		}
@@ -45,7 +46,7 @@ public class NaiveSummerizor implements Summerizor{
 		}
 		// 根据score排序
 		Collections.sort(sentences, 
-						 (lhs, rhs) -> lhs.score() < rhs.score() ? 1 : -1
+						 (lhs, rhs) -> lhs.getScore() < rhs.getScore() ? 1 : -1
 						);
 		
 		// 根据compression_ratio 截断前若干个sentence
@@ -54,7 +55,7 @@ public class NaiveSummerizor implements Summerizor{
 		
 		// 根据sentence在text中的index排序
 		Collections.sort(retained_sentences,
-						 (lhs, rhs) -> lhs.index() < rhs.index() ? 1 : -1
+						 (lhs, rhs) -> lhs.getIndex() < rhs.getIndex() ? 1 : -1
 						);
 		
 		SummerizorOutput output = new SummerizorOutput();
@@ -62,17 +63,26 @@ public class NaiveSummerizor implements Summerizor{
 		return output;
 	}
 	
-	public void set_compression_ratio(double ratio) {
+	public void setCompressionRatio(double ratio) {
 		this._compression_ratio = ratio;
 	}
 	
-	private double calc_score(Sentence first_sentence, Sentence second_sentence) {
+	private double calcScore(Sentence first_sentence, Sentence second_sentence) {
 		Set<String> result = new HashSet<String>();
 		result.clear();
-		result.addAll(first_sentence.word_set());
-		result.retainAll(second_sentence.word_set());
+		result.addAll(first_sentence.getTermTexts());
+		result.retainAll(second_sentence.getTermTexts());
 		return result.size();
 	}
 	
 	private double _compression_ratio;
+
+	/* (non-Javadoc)
+	 * @see opinionSummerization.summerizors.Summerizor#summerize(opinionSummerization.utils.Document)
+	 */
+	@Override
+	public SummerizorOutput summerize(Document doc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

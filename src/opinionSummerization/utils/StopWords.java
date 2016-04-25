@@ -2,6 +2,8 @@ package opinionSummerization.utils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StopWords {
 	private static HashSet<String> m_stop_words;
@@ -18,5 +20,17 @@ public class StopWords {
 	
 	public static boolean isStopWord(String word) {
 		return m_stop_words.contains(word);
+	}
+	
+	public static boolean isNoiseWord(String word) {
+		if (word.length() <= 1)
+			return true;
+		
+		Pattern p = Pattern.compile("(\\d+\\.?\\d+|\\d)");
+		Matcher m = p.matcher(word);
+		if (m.find())
+			return true;
+		
+		return false;
 	}
 }

@@ -1,8 +1,6 @@
 package opinionSummerization.utils;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.io.*;
 
 
@@ -35,7 +33,29 @@ public class FileUtil {
 		}
 
 	}
-
+	
+	public static void writeString(String filename, String content) {
+		BufferedWriter writer = null;
+		
+		try {
+			File file = new File(filename);
+			file.createNewFile();
+			writer = new BufferedWriter(new FileWriter(file));
+			writer.write(content);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 	public static void writeLines(String file, ArrayList<?> counts) {
 		BufferedWriter writer = null;
 
@@ -282,26 +302,6 @@ public class FileUtil {
 	 * List files in a given directory
 	 * 
 	 * */
-	static public String[] listFiles(String inputdir) {
-		File dir = new File(inputdir);
-
-		String[] children = dir.list();
-		if (children == null) {
-			// Either dir does not exist or is not a directory
-		} else {
-			for (int i = 0; i < children.length; i++) {
-				// Get filename of file or directory
-				String filename = children[i];
-			}
-		}
-
-		return children;
-	}
-
-	/**
-	 * List files in a given directory
-	 * 
-	 * */
 	static public String[] listFilteredFiles(String inputdir,
 			final String filterCondition) {
 		File dir = new File(inputdir);
@@ -317,28 +317,6 @@ public class FileUtil {
 		children = dir.list(filter);
 
 		return children;
-	}
-
-	/**
-	 * List files recursively in a given directory
-	 * 
-	 * */
-	static public void listFilesR() {
-		File dir = new File("directoryName");
-
-		String[] children = dir.list();
-
-		// The list of files can also be retrieved as File objects
-		File[] files = dir.listFiles();
-
-		// This filter only returns directories
-		FileFilter fileFilter = new FileFilter() {
-			public boolean accept(File file) {
-				return file.isDirectory();
-			}
-		};
-		files = dir.listFiles(fileFilter);
-
 	}
 
 	/**
