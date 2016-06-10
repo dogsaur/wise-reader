@@ -45,8 +45,12 @@ public class LdaSummerizor implements Summerizor {
 	}
 	
 	public SummerizorOutput summerize(Document doc) {
+
 		SummerizorOutput result = new SummerizorOutput();
-		
+		if (ldaModel == null) {
+			System.out.println("请先指定lda模型!");
+			return result;
+		}		
 		double [] p_doc = ldaModel.analyze(doc);
 		
 		double p_sum = 0;
@@ -77,6 +81,10 @@ public class LdaSummerizor implements Summerizor {
 			}
 	
 			double score = -(KLsd + KLds);
+			Double s = new Double(score);
+			if (s.isNaN()){
+				score = -99999;
+			}
 			sentence.setScore(score);
 			System.out.println("score :" + score + "\t\t"  + sentence.getText());
 		}

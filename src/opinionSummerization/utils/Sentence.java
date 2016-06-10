@@ -15,9 +15,11 @@ public class Sentence {
 			if (!StopWords.isStopWord(term.getName()) 
 					&& !StopWords.isNoiseWord(term.getName())) {
 				_termTexts.add(term.getName());
-				System.out.println(term.getName());
+				// System.out.println(term.getName());
+				 System.out.print(term+" ");
 			}
 		}
+		System.out.println();
 	}
 	
 	public Sentence(String text, int index) {

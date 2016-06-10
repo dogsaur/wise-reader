@@ -25,17 +25,35 @@ public class SentimentWords {
 		_sentiDict = new HashMap<String, Double>();
 		ArrayList<String> lines = new ArrayList<String>();
 
+		// Load SentiWords from HowNet
 		FileUtil.readLines("./data/dicts/负面评价词语（中文）.txt", lines);
 		for (String word : lines) {
 			if (!word.isEmpty()) {
-				_sentiDict.put(word, -1.0);
+				_sentiDict.put(word, -0.5);
 			}
 		}
 		
 		FileUtil.readLines("./data/dicts/正面评价词语（中文）.txt", lines);
 		for (String word: lines) {
 			if (!word.isEmpty()) {
-				_sentiDict.put(word, 1.0);
+				_sentiDict.put(word, 0.5);
+			}
+		}
+		
+		// Load SentiWords
+		HashMap<String, Double> dicts = new HashMap<String, Double>();
+		dicts.put("./data/dicts/金融正面词语.txt", 1.0);
+		dicts.put("./data/dicts/金融偏正面词语.txt", 0.5);
+		dicts.put("./data/dicts/金融负面词语.txt", -1.0);
+		dicts.put("./data/dicts/金融偏负面词语.txt", -0.5);
+		
+		for (HashMap.Entry<String, Double> entry: dicts.entrySet()) {
+			System.out.println("loading " + entry.getKey());
+			FileUtil.readLines(entry.getKey(), lines);
+			for (String word: lines) {
+				if (!word.isEmpty()) {
+					_sentiDict.put(word, entry.getValue());
+				}
 			}
 		}
 	}
